@@ -7,7 +7,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
-    TextView tv_log;
     private static final String TAG = "LifeCycle";
 
     @Override
@@ -21,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
             instanceState = "Повторный запуск";
         }
 
-        tv_log = findViewById(R.id.tv_log);
         String text = instanceState + " onCreate()";
         writeLogs(text);
     }
@@ -57,8 +55,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void writeLogs(String state) {
-        String text = tv_log.getText().toString() + " \n" + state;
-        tv_log.setText(text);
         Log.d(TAG, state);
     }
 }
