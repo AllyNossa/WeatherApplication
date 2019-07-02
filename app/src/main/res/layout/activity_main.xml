@@ -10,11 +10,49 @@
         android:id="@+id/weather"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/weather"
         android:layout_margin="@dimen/margin_top"
+        android:text="@string/weather"
         android:textSize="@dimen/text_size_common"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/image_container"
+        android:layout_width="@dimen/image_size"
+        android:layout_height="@dimen/image_size"
+        android:layout_margin="@dimen/margin_top"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/weather" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/temperature"
+        android:id="@+id/temperature"
+        android:layout_margin="@dimen/margin_top"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/image_container"/>
+
+    <HorizontalScrollView
+        android:id="@+id/hourly_container"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/height_scroll_container"
+        android:layout_margin="@dimen/margin_top"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/temperature"/>
+
+    <HorizontalScrollView
+        android:id="@+id/weekly_container"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/height_scroll_container"
+        android:layout_margin="@dimen/margin_top"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/hourly_container">
+    </HorizontalScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
