@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">WeatherApplication</string>
     <string name="weather">Погода</string>
-    <string name="temperature">Показатель  \nтемпературы</string>
+    <string name="temperature">+26°C</string>
+    <string name="city">Москва</string>
+    <string name="state">Облачно, без осадков</string>
+    <string name="monday">Понедельник \n+16°C</string>
 
 </resources>
