@@ -34,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/temperature"
-        android:textColor="#FF7F50"
+        android:textColor="@color/orange"
         android:id="@+id/temperature"
         android:textSize="@dimen/text_size_temperature"
         android:layout_margin="@dimen/margin_top"

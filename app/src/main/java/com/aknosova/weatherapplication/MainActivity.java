@@ -13,15 +13,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        String instanceState;
-        if (savedInstanceState == null) {
-            instanceState = "Первый запуск";
-        } else {
-            instanceState = "Повторный запуск";
-        }
-
-        String text = instanceState + " onCreate()";
-        writeLogs(text);
+        writeLogs("onCreate()");
     }
 
     @Override
