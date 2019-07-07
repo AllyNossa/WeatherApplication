@@ -41,10 +41,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean isCheckedCheckbox() {
-        if (checkbox1.isChecked()) {
-            return true;
-        }
-        return false;
+        return checkbox1.isChecked();
     }
 
     @Override
