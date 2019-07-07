@@ -14,9 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity {
     private Button searchButton;
     private EditText editTextCity;
-    public static final String CITY = "CITY";
-    public static final String CHECKBOX = "CHECKBOX";
-
+    public static final String STATE = "STATE";
     private String inputTextCity = null;
     private CheckBox checkbox1;
 
@@ -32,36 +30,34 @@ public class MainActivity extends AppCompatActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startSecondActivity();
+                LocalParcel parcel = new LocalParcel();
+                parcel.setText(editTextCity.getText().toString());
+                parcel.setChecked(isCheckedCheckbox());
+                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                intent.putExtra(STATE, parcel);
+                startActivity(intent);
             }
         });
     }
 
-    private boolean isCheckedCheckbox(){
+    private boolean isCheckedCheckbox() {
         if (checkbox1.isChecked()) {
             return true;
         }
         return false;
     }
 
-    private void startSecondActivity() {
-        Intent intent = new Intent(this, SecondActivity.class);
-        intent.putExtra(CITY, editTextCity.getText().toString());
-        intent.putExtra(CHECKBOX, isCheckedCheckbox());
-        startActivity(intent);
-    }
-
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         inputTextCity = editTextCity.getText().toString();
-        outState.putString(CITY, inputTextCity);
+        outState.putString(STATE, inputTextCity);
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        inputTextCity = savedInstanceState.getString(CITY);
+        inputTextCity = savedInstanceState.getString(STATE);
         editTextCity.setText(inputTextCity);
     }
 }

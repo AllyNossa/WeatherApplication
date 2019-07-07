@@ -6,13 +6,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import static com.aknosova.weatherapplication.MainActivity.CHECKBOX;
-import static com.aknosova.weatherapplication.MainActivity.CITY;
+import static com.aknosova.weatherapplication.MainActivity.STATE;
 
 public class SecondActivity extends AppCompatActivity {
-
-    private String receivedDatas = null;
-    private boolean receivedDatasCheckbox = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,14 +17,13 @@ public class SecondActivity extends AppCompatActivity {
 
         TextView textViewCity = findViewById(R.id.city);
         TextView textViewhumidity = findViewById(R.id.humidity);
-
         if (getIntent() != null && getIntent().getExtras() != null) {
-            receivedDatas = getIntent().getStringExtra(CITY);
-            receivedDatasCheckbox = getIntent().getBooleanExtra(CHECKBOX, false);
+            LocalParcel parcel = (LocalParcel) getIntent().getExtras().getSerializable(STATE);
+            textViewCity.setText(parcel.getText());
+
+            if (parcel.isChecked()) {
+                textViewhumidity.setVisibility(View.VISIBLE);
+            } else textViewhumidity.setVisibility(View.INVISIBLE);
         }
-        textViewCity.setText(receivedDatas);
-        if (receivedDatasCheckbox) {
-            textViewhumidity.setVisibility(View.VISIBLE);
-        } else textViewhumidity.setVisibility(View.INVISIBLE);
     }
 }
