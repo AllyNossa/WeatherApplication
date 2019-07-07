@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
     private Button searchButton;
     private EditText editTextCity;
     public static final String STATE = "STATE";
-    private String inputTextCity = null;
+    private String inputTextCity;
     private CheckBox checkbox1;
 
     @Override
