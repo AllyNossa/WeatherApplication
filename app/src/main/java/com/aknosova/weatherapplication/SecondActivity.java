@@ -13,7 +13,7 @@ public class SecondActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_second);
 
         TextView textViewCity = findViewById(R.id.city);
         TextView textViewhumidity = findViewById(R.id.humidity);

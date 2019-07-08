@@ -18,8 +18,8 @@ public class LocalParcel implements Serializable {
         return isChecked;
     }
 
-    public void setChecked(boolean checked) {
-        isChecked = checked;
+    public void setChecked(boolean isChecked) {
+        this.isChecked = isChecked;
     }
 }
 

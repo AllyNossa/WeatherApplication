@@ -16,16 +16,16 @@ public class MainActivity extends AppCompatActivity {
     private EditText editTextCity;
     public static final String STATE = "STATE";
     private String inputTextCity;
-    private CheckBox checkbox1;
+    private CheckBox humidityParam;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.activity_main);
 
         searchButton = findViewById(R.id.search_button);
         editTextCity = findViewById(R.id.search_input);
-        checkbox1 = findViewById(R.id.checkbox1);
+        humidityParam = findViewById(R.id.checkbox1);
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean isCheckedCheckbox() {
-        return checkbox1.isChecked();
+        return humidityParam.isChecked();
     }
 
     @Override
