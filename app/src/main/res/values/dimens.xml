@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="text_size_common">20sp</dimen>
+    <dimen name="text_size_medium">20sp</dimen>
+    <dimen name="text_size_small">16sp</dimen>
     <dimen name="margin_top">16dp</dimen>
     <dimen name="text_size_temperature">60sp</dimen>
     <dimen name="text_size_city">40sp</dimen>

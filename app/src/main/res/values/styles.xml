@@ -8,4 +8,34 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="ButtonStyle">
+        <item name="android:background">@color/colorButtonDark</item>
+        <item name="android:layout_margin">@dimen/margin_top</item>
+    </style>
+
+    <style name="CheckBoxStyle">
+        <item name="android:layout_margin">@dimen/margin_top</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
+    </style>
+
+    <style name="InputTextStyle">
+        <item name="android:layout_width">@dimen/width_search_text</item>
+        <item name="android:layout_height">@dimen/height_search_text</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="TextViewMediumStyle">
+        <item name="android:layout_margin">@dimen/margin_top</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+    </style>
+
+    <style name="ImageViewStyle">
+        <item name="android:layout_margin">@dimen/margin_top</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+
+
 </resources>

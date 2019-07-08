@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
         searchButton = findViewById(R.id.search_button);
         editTextCity = findViewById(R.id.search_input);
-        humidityParam = findViewById(R.id.checkbox1);
+        humidityParam = findViewById(R.id.cb_humidity);
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
