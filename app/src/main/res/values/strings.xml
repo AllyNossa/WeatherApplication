@@ -7,5 +7,6 @@
     <string name="input_search_text">Введите город</string>
     <string name="humidity">влажность 10%</string>
     <string name="cb_humidity">Влажность</string>
+    <string name="error_empty_value">Поле не может быть пустое</string>
 
 </resources>
