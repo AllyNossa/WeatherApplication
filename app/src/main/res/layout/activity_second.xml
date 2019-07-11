@@ -6,7 +6,7 @@
 
     <TextView
         android:id="@+id/weather"
-        style="@style/TextViewMediumStyle"
+        style="@style/TextViewMediumStyle.Dark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/weather"
@@ -61,8 +61,8 @@
     <ImageView
         android:id="@+id/image_weather"
         style="@style/ImageViewStyle"
-        android:layout_width="110dp"
-        android:layout_height="82dp"
+        android:layout_width="@dimen/image_view_width"
+        android:layout_height="@dimen/image_view_height"
         android:src="@drawable/sunny_weather"
         app:layout_constraintBottom_toTopOf="@id/temperature"
         app:layout_constraintLeft_toLeftOf="parent"
