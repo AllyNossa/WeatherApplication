@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="text_size_common">20sp</dimen>
+    <dimen name="text_size_medium">20sp</dimen>
+    <dimen name="text_size_small">16sp</dimen>
     <dimen name="margin_top">16dp</dimen>
     <dimen name="text_size_temperature">60sp</dimen>
     <dimen name="text_size_city">40sp</dimen>
     <dimen name="width_search_text">150dp</dimen>
     <dimen name="height_search_text">50dp</dimen>
     <dimen name="width_checkbox">10dp</dimen>
+    <dimen name="padding_button">10dp</dimen>
+    <dimen name="image_view_width">110dp</dimen>
+    <dimen name="image_view_height">82dp</dimen>
 </resources>

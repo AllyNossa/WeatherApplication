@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,17 +26,21 @@ public class MainActivity extends AppCompatActivity {
 
         searchButton = findViewById(R.id.search_button);
         editTextCity = findViewById(R.id.search_input);
-        humidityParam = findViewById(R.id.checkbox1);
+        humidityParam = findViewById(R.id.cb_humidity);
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LocalParcel parcel = new LocalParcel();
-                parcel.setText(editTextCity.getText().toString());
-                parcel.setChecked(isCheckedCheckbox());
-                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-                intent.putExtra(STATE, parcel);
-                startActivity(intent);
+                if (editTextCity.getText().length() == 0) {
+                    Toast.makeText(MainActivity.this, getString(R.string.error_empty_value), Toast.LENGTH_SHORT).show();
+                } else {
+                    LocalParcel parcel = new LocalParcel();
+                    parcel.setText(editTextCity.getText().toString());
+                    parcel.setChecked(isCheckedCheckbox());
+                    Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                    intent.putExtra(STATE, parcel);
+                    startActivity(intent);
+                }
             }
         });
     }

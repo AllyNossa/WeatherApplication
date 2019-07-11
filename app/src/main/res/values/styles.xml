@@ -6,6 +6,35 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:background">@drawable/ic_pastel</item>
+    </style>
+
+    <style name="ButtonStyle">
+        <item name="android:background">@drawable/ic_gold_button_009</item>
+        <item name="android:layout_margin">@dimen/margin_top</item>
+        <item name="android:padding">@dimen/padding_button</item>
+    </style>
+
+    <style name="CheckBoxStyle">
+        <item name="android:layout_margin">@dimen/margin_top</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
+    </style>
+
+    <style name="InputTextStyle">
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="TextViewMediumStyle">
+        <item name="android:layout_margin">@dimen/margin_top</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+    </style>
+    
+    <style name="TextViewMediumStyle.Dark">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="ImageViewStyle">
+        <item name="android:layout_margin">@dimen/margin_top</item>
     </style>
 
 </resources>
