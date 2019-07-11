@@ -21,8 +21,6 @@
     </style>
 
     <style name="InputTextStyle">
-        <item name="android:layout_width">@dimen/width_search_text</item>
-        <item name="android:layout_height">@dimen/height_search_text</item>
         <item name="android:gravity">center</item>
     </style>
 
@@ -37,8 +35,6 @@
 
     <style name="ImageViewStyle">
         <item name="android:layout_margin">@dimen/margin_top</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
     </style>
 
 </resources>

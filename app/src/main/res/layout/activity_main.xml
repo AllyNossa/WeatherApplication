@@ -17,6 +17,8 @@
     <EditText
         android:id="@+id/search_input"
         style="@style/InputTextStyle"
+        android:layout_width="@dimen/width_search_text"
+        android:layout_height="@dimen/height_search_text"
         android:hint="@string/input_search_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
