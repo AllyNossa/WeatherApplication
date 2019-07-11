@@ -63,11 +63,10 @@
         style="@style/ImageViewStyle"
         android:layout_width="@dimen/image_view_width"
         android:layout_height="@dimen/image_view_height"
-        android:src="@drawable/sunny_weather"
+        android:src="@drawable/ic_sivvus_weather"
         app:layout_constraintBottom_toTopOf="@id/temperature"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/city" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
