@@ -11,8 +11,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 public class SearchCityFragment extends Fragment {
+
+    DataDisplayFragment dataDisplayFragment;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -28,19 +32,16 @@ public class SearchCityFragment extends Fragment {
         if (activityContext == null) {
             return;
         }
-//
-//
-//        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//
-//        Button searchCityBtn = getActivity().findViewById(R.id.search_input);
-//
-//        searchCityBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//
-//            }
-//        });
 
+        Button searchBtn = getActivity().findViewById(R.id.search_button);
+
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dataDisplayFragment = new DataDisplayFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.main_container, dataDisplayFragment).addToBackStack(null).commit();
+            }
+        });
     }
 }
