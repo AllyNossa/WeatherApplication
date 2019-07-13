@@ -4,14 +4,19 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
+
+import static com.aknosova.weatherapplication.SearchCityFragment.STATE;
+
 
 public class DataDisplayFragment extends Fragment {
+    TextView textViewCity;
+    TextView textViewhumidity;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -24,8 +29,24 @@ public class DataDisplayFragment extends Fragment {
 
         FragmentActivity activityContext = getActivity();
 
+        textViewCity = getActivity().findViewById(R.id.city);
+        textViewhumidity = getActivity().findViewById(R.id.humidity);
+
         if (activityContext == null) {
             return;
+        }
+
+        Bundle fromSearchCityFragment = getArguments();
+
+        LocalParcel parcel = (LocalParcel) fromSearchCityFragment.getSerializable(STATE);
+
+        if (getArguments() != null) {
+
+            textViewCity.setText(parcel.getText());
+
+            if (parcel.isChecked()) {
+                textViewhumidity.setVisibility(View.VISIBLE);
+            } else textViewhumidity.setVisibility(View.INVISIBLE);
         }
     }
 }

@@ -16,7 +16,7 @@ import androidx.fragment.app.FragmentTransaction;
 public class MainActivity extends AppCompatActivity {
 //    private Button searchButton;
 //    private EditText editTextCity;
-//    public static final String STATE = "STATE";
+
 //    private String inputTextCity;
 //    private CheckBox humidityParam;
 
