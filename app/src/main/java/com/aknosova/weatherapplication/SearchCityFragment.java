@@ -1,6 +1,8 @@
 package com.aknosova.weatherapplication;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 public class SearchCityFragment extends Fragment {
+    private static final String TAG = "LifeCycle";
 
     DataDisplayFragment dataDisplayFragment;
     LocalParcel localParcel;
@@ -25,12 +28,14 @@ public class SearchCityFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        writeLogs("onCreateView()");
         return inflater.inflate(R.layout.fragment_search_city, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        writeLogs("onActivityCreated()");
 
         FragmentActivity activityContext = getActivity();
 
@@ -62,8 +67,36 @@ public class SearchCityFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        writeLogs("onPause()");
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        writeLogs("onAttach()");
+    }
+
+    @Override
+    public void onDestroyView() {
+        writeLogs("onDestroyView()");
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDetach() {
+        writeLogs("onDetach()");
+        super.onDetach();
+    }
+
     private boolean isCheckedCheckbox() {
         return humidityParam.isChecked();
+    }
+
+    private void writeLogs(String state) {
+        Log.d(TAG, "Фрагмент " + state);
     }
 }
 
