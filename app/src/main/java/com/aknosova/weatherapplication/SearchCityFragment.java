@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -22,20 +23,32 @@ public class SearchCityFragment extends Fragment {
     LocalParcel localParcel;
     public static final String STATE = "STATE";
     private EditText editTextCity;
+    private Button searchBtn;
     private CheckBox humidityParam;
     private String cityValue;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        writeLogs("onCreate()");
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        writeLogs("onCreateView()");
+        setRetainInstance(true);
         return inflater.inflate(R.layout.fragment_search_city, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         writeLogs("onActivityCreated()");
+        editTextCity = getView().findViewById(R.id.search_input);
+        searchBtn = getView().findViewById(R.id.search_button);
+        humidityParam = getView().findViewById(R.id.cb_humidity);
 
         FragmentActivity activityContext = getActivity();
 
@@ -43,9 +56,9 @@ public class SearchCityFragment extends Fragment {
             return;
         }
 
-        Button searchBtn = getActivity().findViewById(R.id.search_button);
-        humidityParam = getActivity().findViewById(R.id.cb_humidity);
-        editTextCity = getActivity().findViewById(R.id.search_input);
+        if (savedInstanceState != null) {
+            editTextCity.setText(savedInstanceState.getString("CITY"));
+        }
 
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +75,10 @@ public class SearchCityFragment extends Fragment {
                 dataDisplayFragment.setArguments(bundle);
 
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.main_container, dataDisplayFragment).addToBackStack(null).commit();
+                fragmentManager
+                        .beginTransaction()
+                        .replace(R.id.main_container, dataDisplayFragment)
+                        .commit();
             }
         });
     }
@@ -77,6 +93,12 @@ public class SearchCityFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         writeLogs("onAttach()");
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("CITY", editTextCity.getText().toString());
     }
 
     @Override

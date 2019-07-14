@@ -10,8 +10,8 @@ import androidx.fragment.app.FragmentTransaction;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "LifeCycle";
 
-    SearchCityFragment searchCityFragment;
-    FragmentTransaction fragmentTransaction;
+    private SearchCityFragment searchCityFragment;
+    private FragmentTransaction fragmentTransaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,9 +19,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         writeLogs("onCreate()");
 
-        searchCityFragment = new SearchCityFragment();
+        searchCityFragment = (SearchCityFragment) getSupportFragmentManager()
+                .findFragmentByTag("SEARCH_FRAGMENT");
+
+        if (searchCityFragment == null) {
+            searchCityFragment = new SearchCityFragment();
+        }
+
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.main_container, searchCityFragment).commit();
+        fragmentTransaction
+                .replace(R.id.main_container, searchCityFragment, "SEARCH_FRAGMENT")
+                .commit();
     }
 
     @Override

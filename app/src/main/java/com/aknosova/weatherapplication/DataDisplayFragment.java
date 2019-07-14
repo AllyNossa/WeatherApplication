@@ -17,6 +17,12 @@ public class DataDisplayFragment extends Fragment {
     TextView textViewCity;
     TextView textViewhumidity;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        setRetainInstance(true);
+        super.onCreate(savedInstanceState);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -29,8 +35,8 @@ public class DataDisplayFragment extends Fragment {
 
         FragmentActivity activityContext = getActivity();
 
-        textViewCity = getActivity().findViewById(R.id.city);
-        textViewhumidity = getActivity().findViewById(R.id.humidity);
+        textViewCity = getView().findViewById(R.id.city);
+        textViewhumidity = getView().findViewById(R.id.humidity);
 
         if (activityContext == null) {
             return;
