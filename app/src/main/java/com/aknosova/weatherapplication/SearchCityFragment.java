@@ -25,6 +25,11 @@ public class SearchCityFragment extends Fragment {
     private CheckBox humidityParam;
     private String cityValue;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -35,17 +40,17 @@ public class SearchCityFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        setRetainInstance(true);
         writeLogs("onActivityCreated()");
+        editTextCity = getView().findViewById(R.id.search_input);
+        Button searchBtn = getView().findViewById(R.id.search_button);
+        humidityParam = getView().findViewById(R.id.cb_humidity);
 
         FragmentActivity activityContext = getActivity();
 
         if (activityContext == null) {
             return;
         }
-
-        Button searchBtn = getActivity().findViewById(R.id.search_button);
-        humidityParam = getActivity().findViewById(R.id.cb_humidity);
-        editTextCity = getActivity().findViewById(R.id.search_input);
 
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
