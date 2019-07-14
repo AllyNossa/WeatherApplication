@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -28,19 +29,24 @@ public class SearchCityFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        writeLogs("onCreate()");
+        if (savedInstanceState != null) {
+            editTextCity.setText(savedInstanceState.getString("CITY"));
+        }
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        writeLogs("onCreateView()");
+        setRetainInstance(true);
         return inflater.inflate(R.layout.fragment_search_city, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setRetainInstance(true);
+
         writeLogs("onActivityCreated()");
         editTextCity = getView().findViewById(R.id.search_input);
         Button searchBtn = getView().findViewById(R.id.search_button);
@@ -85,6 +91,12 @@ public class SearchCityFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("CITY", editTextCity.getText().toString());
+    }
+
+    @Override
     public void onDestroyView() {
         writeLogs("onDestroyView()");
         super.onDestroyView();
@@ -103,5 +115,7 @@ public class SearchCityFragment extends Fragment {
     private void writeLogs(String state) {
         Log.d(TAG, "Фрагмент " + state);
     }
+
+
 }
 

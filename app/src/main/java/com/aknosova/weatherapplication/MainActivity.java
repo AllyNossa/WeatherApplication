@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
         searchCityFragment = new SearchCityFragment();
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.main_container, searchCityFragment).commit();
+        fragmentTransaction.replace(R.id.main_container, searchCityFragment).addToBackStack(null).commit();
     }
 
     @Override
