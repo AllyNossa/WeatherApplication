@@ -31,9 +31,6 @@ public class SearchCityFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         writeLogs("onCreate()");
-        if (savedInstanceState != null) {
-            editTextCity.setText(savedInstanceState.getString("CITY"));
-        }
     }
 
     @Nullable
@@ -56,6 +53,11 @@ public class SearchCityFragment extends Fragment {
 
         if (activityContext == null) {
             return;
+        }
+
+        if (savedInstanceState != null) {
+            editTextCity.setText(savedInstanceState.getString("CITY"));
+            Log.d("city", cityValue);
         }
 
         searchBtn.setOnClickListener(new View.OnClickListener() {
@@ -94,6 +96,7 @@ public class SearchCityFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("CITY", editTextCity.getText().toString());
+        Log.d("deb", outState.getString("CITY"));
     }
 
     @Override
