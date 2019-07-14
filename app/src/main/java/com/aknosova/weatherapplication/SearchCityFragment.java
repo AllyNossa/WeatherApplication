@@ -76,6 +76,7 @@ public class SearchCityFragment extends Fragment {
                 fragmentManager
                         .beginTransaction()
                         .replace(R.id.main_container, dataDisplayFragment)
+                        .addToBackStack(null)
                         .commit();
             }
         });
