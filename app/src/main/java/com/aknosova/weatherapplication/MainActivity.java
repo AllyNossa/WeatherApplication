@@ -3,7 +3,10 @@ package com.aknosova.weatherapplication;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 
@@ -26,9 +29,24 @@ public class MainActivity extends AppCompatActivity {
             searchCityFragment = new SearchCityFragment();
         }
 
-        fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction
-                .replace(R.id.main_container, searchCityFragment, "SEARCH_FRAGMENT")
+        startFragmentWithoutBackStack(searchCityFragment, "SEARCH_FRAGMENT");
+    }
+
+
+    public void startFragmentWithBackStack(Fragment fragment, String tag) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.main_container, fragment, tag)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    public void startFragmentWithoutBackStack(Fragment fragment, String tag) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.main_container, fragment, tag)
                 .commit();
     }
 

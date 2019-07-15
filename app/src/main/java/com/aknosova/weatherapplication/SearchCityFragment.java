@@ -1,5 +1,6 @@
 package com.aknosova.weatherapplication;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,7 +30,6 @@ public class SearchCityFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         writeLogs("onCreate()");
     }
 
@@ -71,13 +71,8 @@ public class SearchCityFragment extends Fragment {
 
                 dataDisplayFragment = new DataDisplayFragment();
                 dataDisplayFragment.setArguments(bundle);
-
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentManager
-                        .beginTransaction()
-                        .replace(R.id.main_container, dataDisplayFragment)
-                        .addToBackStack(null)
-                        .commit();
+                MainActivity mainActivity = (MainActivity) getActivity();
+                mainActivity.startFragmentWithBackStack(dataDisplayFragment, "DATA_FRAGMENT");
             }
         });
     }
