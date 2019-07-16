@@ -1,49 +1,39 @@
 package com.aknosova.weatherapplication;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 
 public class SearchCityFragment extends Fragment {
-    private static final String TAG = "LifeCycle";
-
-    DataDisplayFragment dataDisplayFragment;
-    LocalParcel localParcel;
+    public static final String TAG = "SearchCityFragment";
     public static final String STATE = "STATE";
+
+    private LocalParcel localParcel;
+
     private EditText editTextCity;
     private Button searchBtn;
     private CheckBox humidityParam;
-    private String cityValue;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        writeLogs("onCreate()");
-    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        setRetainInstance(true);
         return inflater.inflate(R.layout.fragment_search_city, container, false);
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        writeLogs("onActivityCreated()");
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setRetainInstance(true);
+
         editTextCity = getView().findViewById(R.id.search_input);
         searchBtn = getView().findViewById(R.id.search_button);
         humidityParam = getView().findViewById(R.id.cb_humidity);
@@ -61,58 +51,24 @@ public class SearchCityFragment extends Fragment {
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                localParcel = new LocalParcel();
-                cityValue = editTextCity.getText().toString();
-                localParcel.setText(cityValue);
-                localParcel.setChecked(isCheckedCheckbox());
+                localParcel = new LocalParcel(editTextCity.getText().toString(), humidityParam.isChecked());
 
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(STATE, localParcel);
 
-                dataDisplayFragment = new DataDisplayFragment();
-                dataDisplayFragment.setArguments(bundle);
-                MainActivity mainActivity = (MainActivity) getActivity();
-                mainActivity.startFragmentWithBackStack(dataDisplayFragment, "DATA_FRAGMENT");
+                if (getActivity() != null) {
+
+                    MainActivity mainActivity = (MainActivity) getActivity();
+                    mainActivity.startFragment(DataDisplayFragment.TAG, bundle);
+                }
             }
         });
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        writeLogs("onPause()");
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        writeLogs("onAttach()");
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString("CITY", editTextCity.getText().toString());
-    }
-
-    @Override
     public void onDestroyView() {
-        writeLogs("onDestroyView()");
+        searchBtn.setOnClickListener(null);
         super.onDestroyView();
-    }
-
-    @Override
-    public void onDetach() {
-        writeLogs("onDetach()");
-        super.onDetach();
-    }
-
-    private boolean isCheckedCheckbox() {
-        return humidityParam.isChecked();
-    }
-
-    private void writeLogs(String state) {
-        Log.d(TAG, "Фрагмент " + state);
     }
 }
 

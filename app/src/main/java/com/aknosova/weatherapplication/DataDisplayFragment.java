@@ -14,8 +14,11 @@ import static com.aknosova.weatherapplication.SearchCityFragment.STATE;
 
 
 public class DataDisplayFragment extends Fragment {
-    TextView textViewCity;
-    TextView textViewhumidity;
+    public static final String TAG = "DataDisplayFragment";
+
+    private TextView textViewCity;
+    private TextView textViewhumidity;
+    private String defaultCity;
 
     @Nullable
     @Override
@@ -24,29 +27,36 @@ public class DataDisplayFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        FragmentActivity activityContext = getActivity();
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setRetainInstance(true);
 
         textViewCity = getView().findViewById(R.id.city);
         textViewhumidity = getView().findViewById(R.id.humidity);
+
+        FragmentActivity activityContext = getActivity();
 
         if (activityContext == null) {
             return;
         }
 
-        Bundle fromSearchCityFragment = getArguments();
-
-        LocalParcel parcel = (LocalParcel) fromSearchCityFragment.getSerializable(STATE);
-
         if (getArguments() != null) {
 
-            textViewCity.setText(parcel.getText());
+            LocalParcel parcel = (LocalParcel) getArguments().getSerializable(STATE);
 
-            if (parcel.isChecked()) {
-                textViewhumidity.setVisibility(View.VISIBLE);
-            } else textViewhumidity.setVisibility(View.INVISIBLE);
+            if (parcel != null) {
+
+
+                textViewCity.setText(parcel.getText());
+
+                if (parcel.isChecked()) {
+                    textViewhumidity.setVisibility(View.VISIBLE);
+                } else textViewhumidity.setVisibility(View.GONE);
+            } else {
+                defaultCity = "Москва";
+                textViewCity.setText(defaultCity);
+                textViewhumidity.setVisibility(View.GONE);
+            }
         }
     }
 }
