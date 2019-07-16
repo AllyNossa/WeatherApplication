@@ -1,65 +1,62 @@
 package com.aknosova.weatherapplication;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 
 public class MainActivity extends AppCompatActivity {
-    private Button searchButton;
-    private EditText editTextCity;
-    public static final String STATE = "STATE";
-    private String inputTextCity;
-    private CheckBox humidityParam;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        searchButton = findViewById(R.id.search_button);
-        editTextCity = findViewById(R.id.search_input);
-        humidityParam = findViewById(R.id.cb_humidity);
+        if (savedInstanceState == null) {
+            startFragment(SearchCityFragment.TAG, null);
+        }
 
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (editTextCity.getText().length() == 0) {
-                    Toast.makeText(MainActivity.this, getString(R.string.error_empty_value), Toast.LENGTH_SHORT).show();
-                } else {
-                    LocalParcel parcel = new LocalParcel();
-                    parcel.setText(editTextCity.getText().toString());
-                    parcel.setChecked(isCheckedCheckbox());
-                    Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-                    intent.putExtra(STATE, parcel);
-                    startActivity(intent);
-                }
-            }
-        });
+        if (getSupportFragmentManager().findFragmentById(R.id.main_container) == null) {
+            startFragment(null, null);
+        }
     }
 
-    private boolean isCheckedCheckbox() {
-        return humidityParam.isChecked();
+    public void startFragment(@Nullable String tag, @Nullable Bundle bundle) {
+        Fragment fragment;
+
+        if (tag == null) {
+            tag = SearchCityFragment.TAG;
+        }
+
+        switch (tag) {
+            default:
+            case SearchCityFragment.TAG:
+                fragment = new SearchCityFragment();
+                break;
+            case DataDisplayFragment.TAG:
+                fragment = new DataDisplayFragment();
+                break;
+        }
+
+        if (bundle != null) {
+            fragment.setArguments(bundle);
+        }
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_container, fragment)
+                .addToBackStack(tag)
+                .commit();
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        inputTextCity = editTextCity.getText().toString();
-        outState.putString(STATE, inputTextCity);
-    }
+    public void onBackPressed() {
+        super.onBackPressed();
 
-    @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        inputTextCity = savedInstanceState.getString(STATE);
-        editTextCity.setText(inputTextCity);
+        if (getSupportFragmentManager().findFragmentById(R.id.main_container) == null) {
+            finish();
+        }
     }
 }
