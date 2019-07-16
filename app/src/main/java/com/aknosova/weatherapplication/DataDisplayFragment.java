@@ -31,8 +31,8 @@ public class DataDisplayFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setRetainInstance(true);
 
-        textViewCity = getView().findViewById(R.id.city);
-        textViewhumidity = getView().findViewById(R.id.humidity);
+        textViewCity = view.findViewById(R.id.city);
+        textViewhumidity = view.findViewById(R.id.humidity);
 
         FragmentActivity activityContext = getActivity();
 

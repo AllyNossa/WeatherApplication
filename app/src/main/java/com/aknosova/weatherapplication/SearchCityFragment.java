@@ -34,9 +34,9 @@ public class SearchCityFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setRetainInstance(true);
 
-        editTextCity = getView().findViewById(R.id.search_input);
-        searchBtn = getView().findViewById(R.id.search_button);
-        humidityParam = getView().findViewById(R.id.cb_humidity);
+        editTextCity = view.findViewById(R.id.search_input);
+        searchBtn = view.findViewById(R.id.search_button);
+        humidityParam = view.findViewById(R.id.cb_humidity);
 
         FragmentActivity activityContext = getActivity();
 
