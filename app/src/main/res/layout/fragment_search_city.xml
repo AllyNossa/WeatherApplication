@@ -29,6 +29,18 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <CheckBox
+        android:id="@+id/cb_pressure"
+        style="@style/CheckBoxStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_top"
+        android:text="@string/pressure"
+        app:layout_constraintHorizontal_bias="0.485"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_input" />
+
+    <CheckBox
         android:id="@+id/cb_humidity"
         style="@style/CheckBoxStyle"
         android:layout_width="wrap_content"
@@ -36,13 +48,13 @@
         android:text="@string/cb_humidity"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_input" />
+        app:layout_constraintTop_toBottomOf="@id/cb_pressure" />
 
     <fragment
         android:id="@+id/finish_fragment"
         android:name="com.aknosova.weatherapplication.ExitAppFragment"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/height_fragment"
         android:layout_marginTop="@dimen/margin_top"
         app:layout_constraintHorizontal_bias="0.3"
         app:layout_constraintLeft_toLeftOf="parent"

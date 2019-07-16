@@ -22,6 +22,7 @@ public class SearchCityFragment extends Fragment {
     private EditText editTextCity;
     private Button searchBtn;
     private CheckBox humidityParam;
+    private CheckBox pressureParam;
 
     @Nullable
     @Override
@@ -37,6 +38,7 @@ public class SearchCityFragment extends Fragment {
         editTextCity = view.findViewById(R.id.search_input);
         searchBtn = view.findViewById(R.id.search_button);
         humidityParam = view.findViewById(R.id.cb_humidity);
+        pressureParam = view.findViewById(R.id.cb_pressure);
 
         FragmentActivity activityContext = getActivity();
 
@@ -51,7 +53,7 @@ public class SearchCityFragment extends Fragment {
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                localParcel = new LocalParcel(editTextCity.getText().toString(), humidityParam.isChecked());
+                localParcel = new LocalParcel(editTextCity.getText().toString(), humidityParam.isChecked(), pressureParam.isChecked());
 
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(STATE, localParcel);

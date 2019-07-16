@@ -5,9 +5,11 @@
     <string name="state">Облачно, без осадков</string>
     <string name="continue_button">Продолжить</string>
     <string name="input_search_text">Введите город</string>
-    <string name="humidity">влажность 10%</string>
+    <string name="humidity">Влажность 10%</string>
     <string name="cb_humidity">Влажность</string>
     <string name="error_empty_value">Поле не может быть пустое</string>
     <string name="exit">Выйти</string>
+    <string name="pressure">Давление</string>
+    <string name="pressure_text">Давление выше нормы</string>
 
 </resources>

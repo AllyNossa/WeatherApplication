@@ -9,5 +9,7 @@
     <string name="cb_humidity">Humidity</string>
     <string name="error_empty_value">City cannot be empty</string>
     <string name="exit">Exit</string>
+    <string name="pressure">Pressure</string>
+    <string name="pressure_text">Pressure above normal</string>
 
 </resources>
