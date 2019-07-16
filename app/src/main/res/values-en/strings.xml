@@ -8,5 +8,6 @@
     <string name="humidity">Humidity 10%</string>
     <string name="cb_humidity">Humidity</string>
     <string name="error_empty_value">City cannot be empty</string>
+    <string name="exit">Exit</string>
 
 </resources>

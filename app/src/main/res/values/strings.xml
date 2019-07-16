@@ -8,5 +8,6 @@
     <string name="humidity">влажность 10%</string>
     <string name="cb_humidity">Влажность</string>
     <string name="error_empty_value">Поле не может быть пустое</string>
+    <string name="exit">Выйти</string>
 
 </resources>
