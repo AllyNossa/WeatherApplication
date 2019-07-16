@@ -1,12 +1,14 @@
 package com.aknosova.weatherapplication;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 
 public class LocalParcel implements Serializable {
     private String text;
     private boolean isChecked;
 
-    public LocalParcel(String text, boolean isChecked) {
+    public LocalParcel(@NonNull String text, boolean isChecked) {
         this.text = text;
         this.isChecked = isChecked;
     }
