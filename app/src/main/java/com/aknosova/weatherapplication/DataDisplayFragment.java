@@ -48,7 +48,6 @@ public class DataDisplayFragment extends Fragment {
 
             if (parcel != null) {
 
-
                 textViewCity.setText(parcel.getText());
 
                 if (parcel.isHumidityChecked()) {
