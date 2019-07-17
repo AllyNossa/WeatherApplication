@@ -46,10 +46,6 @@ public class SearchCityFragment extends Fragment {
             return;
         }
 
-        if (savedInstanceState != null) {
-            editTextCity.setText(savedInstanceState.getString("CITY"));
-        }
-
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

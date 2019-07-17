@@ -17,7 +17,6 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
         setContentView(R.layout.activity_main);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         if (getSupportFragmentManager().findFragmentById(R.id.main_container) == null) {
