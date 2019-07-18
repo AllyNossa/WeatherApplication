@@ -16,7 +16,6 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         SearchCityFragment searchCityFragment = new SearchCityFragment();
 
