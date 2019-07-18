@@ -11,7 +11,6 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
 public class SearchCityFragment extends Fragment {
     public static final String TAG = "SearchCityFragment";
@@ -40,9 +39,9 @@ public class SearchCityFragment extends Fragment {
         humidityParam = view.findViewById(R.id.cb_humidity);
         pressureParam = view.findViewById(R.id.cb_pressure);
 
-        FragmentActivity activityContext = getActivity();
+        final DataDisplayFragment dataDisplayFragment = new DataDisplayFragment();
 
-        if (activityContext == null) {
+        if (getActivity() == null) {
             return;
         }
 
@@ -57,7 +56,7 @@ public class SearchCityFragment extends Fragment {
                 if (getActivity() != null) {
 
                     MainActivity mainActivity = (MainActivity) getActivity();
-                    mainActivity.startFragment(DataDisplayFragment.TAG, bundle);
+                    mainActivity.startSecondFragment(DataDisplayFragment.TAG, bundle, dataDisplayFragment);
                 }
             }
         });

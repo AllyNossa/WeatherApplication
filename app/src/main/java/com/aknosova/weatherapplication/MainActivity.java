@@ -3,7 +3,7 @@ package com.aknosova.weatherapplication;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -18,38 +18,27 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
+        SearchCityFragment searchCityFragment = new SearchCityFragment();
 
         if (getSupportFragmentManager().findFragmentById(R.id.main_container) == null) {
-            startFragment(null, null);
+            startFirstFragment(SearchCityFragment.TAG, searchCityFragment);
         }
     }
 
     @Override
-    public void startFragment(@Nullable String tag, @Nullable Bundle bundle) {
-        Fragment fragment;
-
-        if (tag == null) {
-            tag = SearchCityFragment.TAG;
-        }
-
-        switch (tag) {
-            default:
-            case SearchCityFragment.TAG:
-                fragment = new SearchCityFragment();
-                break;
-            case DataDisplayFragment.TAG:
-                fragment = new DataDisplayFragment();
-                break;
-        }
-
-        if (bundle != null) {
-            fragment.setArguments(bundle);
-        }
-
+    public void startFirstFragment(@NonNull String tag, @NonNull Fragment fragment) {
         commitFragment(fragment, tag);
     }
 
     @Override
+    public void startSecondFragment(@NonNull String tag, @NonNull Bundle bundle, @NonNull Fragment fragment) {
+
+        if (bundle != null) {
+            fragment.setArguments(bundle);
+        }
+        commitFragment(fragment, tag);
+    }
+
     public void commitFragment(Fragment fragment, String tag) {
         getSupportFragmentManager()
                 .beginTransaction()
