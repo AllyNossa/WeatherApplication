@@ -11,4 +11,5 @@
     <dimen name="padding_button">10dp</dimen>
     <dimen name="image_view_width">110dp</dimen>
     <dimen name="image_view_height">82dp</dimen>
+    <dimen name="height_fragment">0dp</dimen>
 </resources>

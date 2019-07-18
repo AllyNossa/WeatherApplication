@@ -1,49 +1,44 @@
 package com.aknosova.weatherapplication;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FragmentNavigator {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        if (savedInstanceState == null) {
-            startFragment(SearchCityFragment.TAG, null);
-        }
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        SearchCityFragment searchCityFragment = new SearchCityFragment();
 
         if (getSupportFragmentManager().findFragmentById(R.id.main_container) == null) {
-            startFragment(null, null);
+            startFirstFragment(SearchCityFragment.TAG, searchCityFragment);
         }
     }
 
-    public void startFragment(@Nullable String tag, @Nullable Bundle bundle) {
-        Fragment fragment;
+    @Override
+    public void startFirstFragment(@NonNull String tag, @NonNull Fragment fragment) {
+        commitFragment(fragment, tag);
+    }
 
-        if (tag == null) {
-            tag = SearchCityFragment.TAG;
-        }
-
-        switch (tag) {
-            default:
-            case SearchCityFragment.TAG:
-                fragment = new SearchCityFragment();
-                break;
-            case DataDisplayFragment.TAG:
-                fragment = new DataDisplayFragment();
-                break;
-        }
+    @Override
+    public void startSecondFragment(@NonNull String tag, @NonNull Bundle bundle, @NonNull Fragment fragment) {
 
         if (bundle != null) {
             fragment.setArguments(bundle);
         }
+        commitFragment(fragment, tag);
+    }
 
+    public void commitFragment(Fragment fragment, String tag) {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.main_container, fragment)
@@ -57,6 +52,17 @@ public class MainActivity extends AppCompatActivity {
 
         if (getSupportFragmentManager().findFragmentById(R.id.main_container) == null) {
             finish();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

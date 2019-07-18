@@ -4,9 +4,12 @@
     <string name="temperature">+26&#x2103;</string>
     <string name="state">Cloudy</string>
     <string name="continue_button">Continue</string>
-    <string name="input_search_text">Choose_city</string>
+    <string name="input_search_text">Enter city</string>
     <string name="humidity">Humidity 10%</string>
     <string name="cb_humidity">Humidity</string>
     <string name="error_empty_value">City cannot be empty</string>
+    <string name="exit">Exit</string>
+    <string name="pressure">Pressure</string>
+    <string name="pressure_text">Pressure above normal</string>
 
 </resources>

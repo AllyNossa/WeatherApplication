@@ -17,7 +17,8 @@ public class DataDisplayFragment extends Fragment {
     public static final String TAG = "DataDisplayFragment";
 
     private TextView textViewCity;
-    private TextView textViewhumidity;
+    private TextView textViewHumidity;
+    private TextView textViewPressure;
     private String defaultCity;
 
     @Nullable
@@ -31,8 +32,9 @@ public class DataDisplayFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setRetainInstance(true);
 
-        textViewCity = getView().findViewById(R.id.city);
-        textViewhumidity = getView().findViewById(R.id.humidity);
+        textViewCity = view.findViewById(R.id.city);
+        textViewHumidity = view.findViewById(R.id.humidity);
+        textViewPressure = view.findViewById(R.id.pressure);
 
         FragmentActivity activityContext = getActivity();
 
@@ -46,16 +48,21 @@ public class DataDisplayFragment extends Fragment {
 
             if (parcel != null) {
 
-
                 textViewCity.setText(parcel.getText());
 
-                if (parcel.isChecked()) {
-                    textViewhumidity.setVisibility(View.VISIBLE);
-                } else textViewhumidity.setVisibility(View.GONE);
+                if (parcel.isHumidityChecked()) {
+                    textViewHumidity.setVisibility(View.VISIBLE);
+                } else textViewHumidity.setVisibility(View.GONE);
+
+                if (parcel.isPressureChecked()) {
+                    textViewPressure.setVisibility(View.VISIBLE);
+                } else textViewPressure.setVisibility(View.GONE);
+
             } else {
                 defaultCity = "Москва";
                 textViewCity.setText(defaultCity);
-                textViewhumidity.setVisibility(View.GONE);
+                textViewHumidity.setVisibility(View.GONE);
+                textViewPressure.setVisibility(View.GONE);
             }
         }
     }

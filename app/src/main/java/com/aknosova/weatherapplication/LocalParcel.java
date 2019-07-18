@@ -1,22 +1,31 @@
 package com.aknosova.weatherapplication;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 
 public class LocalParcel implements Serializable {
     private String text;
-    private boolean isChecked;
+    private boolean isHumidityChecked;
+    private boolean isPressureChecked;
 
-    public LocalParcel(String text, boolean isChecked) {
+    public LocalParcel(@NonNull String text, boolean isChecked, boolean isPressureChecked) {
         this.text = text;
-        this.isChecked = isChecked;
+        this.isHumidityChecked = isHumidityChecked();
+        this.isPressureChecked = isPressureChecked;
+
+    }
+
+    public boolean isPressureChecked() {
+        return isPressureChecked;
     }
 
     public String getText() {
         return text;
     }
 
-    public boolean isChecked() {
-        return isChecked;
+    public boolean isHumidityChecked() {
+        return isHumidityChecked;
     }
 }
 
