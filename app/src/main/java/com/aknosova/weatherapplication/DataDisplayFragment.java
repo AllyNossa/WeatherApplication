@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +21,7 @@ public class DataDisplayFragment extends Fragment {
     private TextView textViewHumidity;
     private TextView textViewPressure;
     private String defaultCity;
+    private Button nextWeekBtn;
 
     @Nullable
     @Override
@@ -35,6 +37,7 @@ public class DataDisplayFragment extends Fragment {
         textViewCity = view.findViewById(R.id.city);
         textViewHumidity = view.findViewById(R.id.humidity);
         textViewPressure = view.findViewById(R.id.pressure);
+        nextWeekBtn = view.findViewById(R.id.weekly_btn);
 
         FragmentActivity activityContext = getActivity();
 
@@ -65,5 +68,15 @@ public class DataDisplayFragment extends Fragment {
                 textViewPressure.setVisibility(View.GONE);
             }
         }
+
+        final WeeklyWeatherFragment weeklyWeatherFragment = new WeeklyWeatherFragment();
+
+        nextWeekBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MainActivity mainActivity = (MainActivity) getActivity();
+                mainActivity.startSecondFragment(WeeklyWeatherFragment.TAG, null, weeklyWeatherFragment);
+            }
+        });
     }
 }
