@@ -41,10 +41,6 @@ public class SearchCityFragment extends Fragment {
 
         final DataDisplayFragment dataDisplayFragment = new DataDisplayFragment();
 
-        if (getActivity() == null) {
-            return;
-        }
-
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
