@@ -9,9 +9,9 @@ public class LocalParcel implements Serializable {
     private boolean isHumidityChecked;
     private boolean isPressureChecked;
 
-    public LocalParcel(@NonNull String text, boolean isChecked, boolean isPressureChecked) {
+    public LocalParcel(@NonNull String text, boolean isHumidityChecked, boolean isPressureChecked) {
         this.text = text;
-        this.isHumidityChecked = isHumidityChecked();
+        this.isHumidityChecked = isHumidityChecked;
         this.isPressureChecked = isPressureChecked;
 
     }
