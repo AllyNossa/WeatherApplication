@@ -82,6 +82,7 @@
     <Button
         android:id="@+id/weekly_btn"
         app:layout_constraintTop_toBottomOf="@id/pressure"
+        android:foreground="?android:attr/selectableItemBackground"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="@dimen/margin_top"

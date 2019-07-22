@@ -13,5 +13,6 @@
     <string name="pressure_text">Давление выше нормы</string>
     <string name="weekly_weather">Погода на неделю</string>
     <string name="item_text">Пункт</string>
+    <string name="empty_error">Поле не может быть пустым</string>
 
 </resources>

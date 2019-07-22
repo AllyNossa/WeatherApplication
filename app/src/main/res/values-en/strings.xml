@@ -13,5 +13,6 @@
     <string name="pressure_text">Pressure above normal</string>
     <string name="weekly_weather">Weekly weather</string>
     <string name="item_text">Item</string>
+    <string name="empty_error">City cannot be empty</string>
 
 </resources>

@@ -17,4 +17,6 @@
     <dimen name="margin_cardview">16dp</dimen>
     <dimen name="elevation">26dp</dimen>
     <dimen name="text_size_cardview">35sp</dimen>
+    <dimen name="margin_default">8dp</dimen>
+    <dimen name="margin_default_top">84dp</dimen>
 </resources>
