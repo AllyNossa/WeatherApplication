@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -11,7 +13,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class WeeklyWeatherFragment extends Fragment {
+public class WeeklyWeatherFragment extends Fragment implements OnRecyclerViewClickListener{
     public static final String TAG = "WeeklyWeatherFragment";
 
     private String[] week = {"Monday +17°C", "Tuesday +23°C", "Wednesday +20°C", "Thursday +16°C", "Friday +23°C", "Saturday +23°C", "Sunday +20°C"};
@@ -38,7 +40,16 @@ public class WeeklyWeatherFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        WeeklyWeatherAdapter weeklyWeatherAdapter = new WeeklyWeatherAdapter(week);
+        WeeklyWeatherAdapter weeklyWeatherAdapter = new WeeklyWeatherAdapter(week, this);
         recyclerView.setAdapter(weeklyWeatherAdapter);
+    }
+
+    @Override
+    public void onClick(View view, int position) {
+        if (getActivity() != null) {
+            String message;
+            message = String.format("Выбран день недели - %s", position);
+            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -11,9 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class WeeklyWeatherAdapter extends RecyclerView.Adapter<WeeklyWeatherAdapter.ViewHolder> {
     private String[] data;
+    private OnRecyclerViewClickListener recyclerItemClickListener;
 
-    public WeeklyWeatherAdapter(String[] data) {
+    public WeeklyWeatherAdapter(String[] data, OnRecyclerViewClickListener recyclerItemClickListener) {
         this.data = data;
+        this.recyclerItemClickListener = recyclerItemClickListener;
     }
 
     @NonNull
@@ -21,7 +23,7 @@ public class WeeklyWeatherAdapter extends RecyclerView.Adapter<WeeklyWeatherAdap
     public WeeklyWeatherAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.day_item, parent, false);
-        ViewHolder viewHolder = new ViewHolder((CardView) view);
+        ViewHolder viewHolder = new ViewHolder((CardView) view, recyclerItemClickListener);
         return viewHolder;
     }
 
@@ -40,13 +42,22 @@ public class WeeklyWeatherAdapter extends RecyclerView.Adapter<WeeklyWeatherAdap
         private CardView cardView;
 
 
-        public ViewHolder(@NonNull CardView view) {
+        public ViewHolder(@NonNull CardView view, final OnRecyclerViewClickListener recyclerItemClickListener) {
             super(view);
 
             textView = view.findViewById(R.id.text_view);
             cardView = view.findViewById(R.id.card_view);
 
             cardView = view;
+
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (recyclerItemClickListener != null) {
+                        recyclerItemClickListener.onClick(view, getAdapterPosition());
+                    }
+                }
+            });
         }
     }
 }
