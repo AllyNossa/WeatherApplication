@@ -14,5 +14,6 @@
     <string name="weekly_weather">Weekly weather</string>
     <string name="item_text">Item</string>
     <string name="empty_error">City cannot be empty</string>
+    <string name="toolbar_text">Weekly weather</string>
 
 </resources>

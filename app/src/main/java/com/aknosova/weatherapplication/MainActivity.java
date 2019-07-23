@@ -1,5 +1,6 @@
 package com.aknosova.weatherapplication;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
         setContentView(R.layout.activity_main);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.yellow)));
         SearchCityFragment searchCityFragment = new SearchCityFragment();
 
         if (getSupportFragmentManager().findFragmentById(R.id.main_container) == null) {

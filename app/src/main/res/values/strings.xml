@@ -14,5 +14,6 @@
     <string name="weekly_weather">Погода на неделю</string>
     <string name="item_text">Пункт</string>
     <string name="empty_error">Поле не может быть пустым</string>
+    <string name="toolbar_text">Погода на неделю</string>
 
 </resources>
