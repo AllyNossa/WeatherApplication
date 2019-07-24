@@ -6,11 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 public class SearchCityFragment extends Fragment {
     public static final String TAG = "SearchCityFragment";
@@ -18,7 +19,7 @@ public class SearchCityFragment extends Fragment {
 
     private LocalParcel localParcel;
 
-    private EditText editTextCity;
+    private TextInputEditText editTextCity;
     private Button searchBtn;
     private CheckBox humidityParam;
     private CheckBox pressureParam;
@@ -44,15 +45,23 @@ public class SearchCityFragment extends Fragment {
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                localParcel = new LocalParcel(editTextCity.getText().toString(), humidityParam.isChecked(), pressureParam.isChecked());
+                if (editTextCity.getText() != null) {
+                    String value = editTextCity.getText().toString();
 
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(STATE, localParcel);
+                    if (value.matches("")) {
+                        editTextCity.setError(getString(R.string.empty_error));
+                    } else {
+                        localParcel = new LocalParcel(editTextCity.getText().toString(), humidityParam.isChecked(), pressureParam.isChecked());
 
-                if (getActivity() != null) {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(STATE, localParcel);
 
-                    MainActivity mainActivity = (MainActivity) getActivity();
-                    mainActivity.startSecondFragment(DataDisplayFragment.TAG, bundle, dataDisplayFragment);
+                        if (getActivity() != null) {
+
+                            MainActivity mainActivity = (MainActivity) getActivity();
+                            mainActivity.startSecondFragment(DataDisplayFragment.TAG, bundle, dataDisplayFragment);
+                        }
+                    }
                 }
             }
         });
