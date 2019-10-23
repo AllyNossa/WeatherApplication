@@ -23,4 +23,8 @@
     <dimen name="margin_default_top">84dp</dimen>
     <dimen name="padding_left_text">16dp</dimen>
     <dimen name="height_cardview">114dp</dimen>
+    <dimen name="nav_hedear_height">180dp</dimen>
+    <dimen name="height_feedback_param">300dp</dimen>
+    <dimen name="margin_top_about">180dp</dimen>
+    <dimen name="margin_avatar">40dp</dimen>
 </resources>

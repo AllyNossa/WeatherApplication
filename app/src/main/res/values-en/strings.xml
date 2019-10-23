@@ -15,5 +15,16 @@
     <string name="item_text">Item</string>
     <string name="empty_error">City cannot be empty</string>
     <string name="toolbar_text">Weekly weather</string>
+    <string name="support">Support</string>
+    <string name="nav_open_drawer">Open navigation drawer</string>
+    <string name="feedback">Обратная связь</string>
+    <string name="about">О разработчике:</string>
+    <string name="nav_close_drawer" translatable="false">Close navigation drawer</string>
+    <string name="user_name">test@test.ru</string>
+    <string name="clear">Очистить</string>
+    <string name="developer_alla">Developer Alla</string>
+    <string name="stub">Заглушка</string>
+    <string name="about_nav_item">О разработчике</string>
+    <string name="search_city">Поиск города</string>
 
 </resources>
