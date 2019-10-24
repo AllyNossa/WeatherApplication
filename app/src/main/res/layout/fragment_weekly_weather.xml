@@ -14,11 +14,11 @@
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <View
+            <ImageView
                 android:id="@+id/main_backdrop"
-                android:layout_width="wrap_content"
-                android:layout_height="220dp"
-                android:background="@color/yellow"
+                android:layout_width="match_parent"
+                android:layout_height="260dp"
+                android:background="@drawable/ic_unicorn"
                 android:scaleType="fitCenter"
                 app:layout_collapseMode="parallax" />
 

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">WeatherApplication</string>
     <string name="weather">Погода</string>
     <string name="temperature">+26&#x2103;</string>
@@ -15,5 +15,17 @@
     <string name="item_text">Пункт</string>
     <string name="empty_error">Поле не может быть пустым</string>
     <string name="toolbar_text">Погода на неделю</string>
+    <string name="user_name">test@test.ru</string>
+    <string name="support">Support</string>
+    <string name="feedback">Обратная связь</string>
+    <string name="about">О разработчике:</string>
+    <string name="nav_open_drawer">Open navigation drawer</string>
+    <string name="nav_close_drawer">Close navigation drawer</string>
+    <string name="clear">Очистить</string>
+    <string name="developer_alla">Developer Alla</string>
+    <string name="stub">Заглушка</string>
+    <string name="about_nav_item">О разработчике</string>
+    <string name="search_city">Поиск города</string>
+    <string name="update_menu">Обновить</string>
 
 </resources>
