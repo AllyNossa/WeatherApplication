@@ -1,16 +1,24 @@
 package com.aknosova.weatherapplication;
 
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
+import java.util.List;
+
+import static android.content.Context.SENSOR_SERVICE;
 import static com.aknosova.weatherapplication.SearchCityFragment.STATE;
 
 
@@ -19,9 +27,15 @@ public class DataDisplayFragment extends Fragment {
 
     private TextView textViewCity;
     private TextView textViewHumidity;
+    private TextView textViewHumiditySensor;
+    private TextView textViewTemperatureSensor;
     private TextView textViewPressure;
     private String defaultCity;
     private Button nextWeekBtn;
+    private SensorManager sensorManager;
+    private List<Sensor> sensors;
+    private Sensor sensorTemperature;
+    private Sensor sensorHumidity;
 
     @Nullable
     @Override
@@ -38,6 +52,48 @@ public class DataDisplayFragment extends Fragment {
         textViewHumidity = view.findViewById(R.id.humidity);
         textViewPressure = view.findViewById(R.id.pressure);
         nextWeekBtn = view.findViewById(R.id.weekly_btn);
+        textViewTemperatureSensor = view.findViewById(R.id.temperature_sensor);
+        textViewHumiditySensor = view.findViewById(R.id.humidity_sensor);
+
+        sensorManager = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
+        sensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
+        sensorTemperature = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
+        sensorHumidity = sensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY);
+
+        if (sensorTemperature != null) {
+            textViewTemperatureSensor.setVisibility(View.VISIBLE);
+        } else textViewTemperatureSensor.setVisibility(View.GONE);
+
+        if (sensorHumidity != null) {
+            textViewHumiditySensor.setVisibility(View.VISIBLE);
+        } else textViewHumiditySensor.setVisibility(View.GONE);
+
+        SensorEventListener sensorListenerTemperature = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                showTemperatureSensor(event);
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+            }
+        };
+
+        SensorEventListener sensorListenerHumidity = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                showHumiditySensor(event);
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+            }
+        };
+
+        sensorManager.registerListener(sensorListenerTemperature, sensorTemperature, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(sensorListenerHumidity, sensorHumidity, SensorManager.SENSOR_DELAY_NORMAL);
 
         FragmentActivity activityContext = getActivity();
 
@@ -78,5 +134,19 @@ public class DataDisplayFragment extends Fragment {
                 mainActivity.startSecondFragment(WeeklyWeatherFragment.TAG, null, weeklyWeatherFragment);
             }
         });
+    }
+
+    private void showTemperatureSensor(SensorEvent event) {
+        StringBuilder temperatureValueSensor = new StringBuilder();
+
+        temperatureValueSensor.append(event.values[0]);
+        textViewTemperatureSensor.setText("Температура по датчику" + " " + temperatureValueSensor);
+    }
+
+    private void showHumiditySensor(SensorEvent event) {
+        StringBuilder humidityValueSensor = new StringBuilder();
+
+        humidityValueSensor.append(event.values[0]);
+        textViewHumiditySensor.setText("Влажность по датчику" + " " + humidityValueSensor);
     }
 }
