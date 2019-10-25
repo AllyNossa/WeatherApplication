@@ -71,7 +71,7 @@ public class DataDisplayFragment extends Fragment {
         SensorEventListener sensorListenerTemperature = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent event) {
-                showTemperatureSensor(event);
+                showSensor(event, textViewTemperatureSensor, "Температура по датчику ");
             }
 
             @Override
@@ -83,7 +83,7 @@ public class DataDisplayFragment extends Fragment {
         SensorEventListener sensorListenerHumidity = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent event) {
-                showHumiditySensor(event);
+                showSensor(event, textViewHumiditySensor, "Влажность по датчику ");
             }
 
             @Override
@@ -136,17 +136,10 @@ public class DataDisplayFragment extends Fragment {
         });
     }
 
-    private void showTemperatureSensor(SensorEvent event) {
-        StringBuilder temperatureValueSensor = new StringBuilder();
+    private void showSensor(SensorEvent event, TextView textView, String text) {
+        StringBuilder sensorValueText = new StringBuilder();
 
-        temperatureValueSensor.append(event.values[0]);
-        textViewTemperatureSensor.setText("Температура по датчику" + " " + temperatureValueSensor);
-    }
-
-    private void showHumiditySensor(SensorEvent event) {
-        StringBuilder humidityValueSensor = new StringBuilder();
-
-        humidityValueSensor.append(event.values[0]);
-        textViewHumiditySensor.setText("Влажность по датчику" + " " + humidityValueSensor);
+        sensorValueText.append(event.values[0]);
+        textView.setText(text + sensorValueText);
     }
 }
