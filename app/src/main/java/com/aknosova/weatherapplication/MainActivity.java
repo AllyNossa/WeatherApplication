@@ -17,7 +17,8 @@ import com.google.android.material.navigation.NavigationView;
 
 
 public class MainActivity extends AppCompatActivity implements FragmentNavigator, NavigationView.OnNavigationItemSelectedListener {
-    DrawerLayout drawerLayout;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +26,9 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toobar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true);
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         drawerLayout = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open_drawer, R.string.nav_close_drawer);
@@ -34,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
 
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         SearchCityFragment searchCityFragment = new SearchCityFragment();
@@ -105,6 +108,9 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
                 return true;
             case R.id.update_menu:
                 Toast.makeText(this, "Заглушка для обновления информации", Toast.LENGTH_LONG).show();
+                return true;
+            case android.R.id.home:
+                drawerLayout.openDrawer(navigationView);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
