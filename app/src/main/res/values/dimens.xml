@@ -21,6 +21,7 @@
     <dimen name="text_size_cardview">35sp</dimen>
     <dimen name="margin_default">8dp</dimen>
     <dimen name="margin_default_top">84dp</dimen>
+    <dimen name="margin_default_city">70dp</dimen>
     <dimen name="padding_left_text">16dp</dimen>
     <dimen name="height_cardview">114dp</dimen>
     <dimen name="nav_hedear_height">180dp</dimen>

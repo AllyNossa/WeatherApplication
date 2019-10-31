@@ -1,5 +1,9 @@
 package com.aknosova.weatherapplication;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -23,6 +27,8 @@ import static com.aknosova.weatherapplication.SearchCityFragment.STATE;
 
 
 public class DataDisplayFragment extends Fragment {
+    final static String BROADCAST_ACTION = "android_2.lesson04.app01.service_finished";
+    final static String CITYVALUE = "CITYVALUE";
     public static final String TAG = "DataDisplayFragment";
 
     private TextView textViewCity;
@@ -36,6 +42,10 @@ public class DataDisplayFragment extends Fragment {
     private List<Sensor> sensors;
     private Sensor sensorTemperature;
     private Sensor sensorHumidity;
+    private MyReceiver receiver;
+    private TextView tempTextView;
+    private IntentFilter intentFilter;
+    private Intent intentServiceSend;
 
     @Nullable
     @Override
@@ -48,25 +58,11 @@ public class DataDisplayFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setRetainInstance(true);
 
-        textViewCity = view.findViewById(R.id.city);
-        textViewHumidity = view.findViewById(R.id.humidity);
-        textViewPressure = view.findViewById(R.id.pressure);
-        nextWeekBtn = view.findViewById(R.id.weekly_btn);
-        textViewTemperatureSensor = view.findViewById(R.id.temperature_sensor);
-        textViewHumiditySensor = view.findViewById(R.id.humidity_sensor);
+        initViews(view);
 
-        sensorManager = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
-        sensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
-        sensorTemperature = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
-        sensorHumidity = sensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY);
+        getSensors();
 
-        if (sensorTemperature != null) {
-            textViewTemperatureSensor.setVisibility(View.VISIBLE);
-        } else textViewTemperatureSensor.setVisibility(View.GONE);
-
-        if (sensorHumidity != null) {
-            textViewHumiditySensor.setVisibility(View.VISIBLE);
-        } else textViewHumiditySensor.setVisibility(View.GONE);
+        setViewsValuesSensors();
 
         SensorEventListener sensorListenerTemperature = new SensorEventListener() {
             @Override
@@ -92,8 +88,8 @@ public class DataDisplayFragment extends Fragment {
             }
         };
 
-        sensorManager.registerListener(sensorListenerTemperature, sensorTemperature, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(sensorListenerHumidity, sensorHumidity, SensorManager.SENSOR_DELAY_NORMAL);
+        registerSensorListener(sensorListenerTemperature, sensorTemperature);
+        registerSensorListener(sensorListenerHumidity, sensorHumidity);
 
         FragmentActivity activityContext = getActivity();
 
@@ -102,36 +98,74 @@ public class DataDisplayFragment extends Fragment {
         }
 
         if (getArguments() != null) {
-
-            LocalParcel parcel = (LocalParcel) getArguments().getSerializable(STATE);
-
-            if (parcel != null) {
-
-                textViewCity.setText(parcel.getText());
-
-                if (parcel.isHumidityChecked()) {
-                    textViewHumidity.setVisibility(View.VISIBLE);
-                } else textViewHumidity.setVisibility(View.GONE);
-
-                if (parcel.isPressureChecked()) {
-                    textViewPressure.setVisibility(View.VISIBLE);
-                } else textViewPressure.setVisibility(View.GONE);
-
-            } else {
-                defaultCity = "Москва";
-                textViewCity.setText(defaultCity);
-                textViewHumidity.setVisibility(View.GONE);
-                textViewPressure.setVisibility(View.GONE);
-            }
+            getParcelData();
+            infoServiceSend();
+            registerReceiver();
         }
 
         final WeeklyWeatherFragment weeklyWeatherFragment = new WeeklyWeatherFragment();
 
+        btnNextSetOnClickListener(weeklyWeatherFragment);
+    }
+
+    private void setViewsValuesSensors() {
+        if (sensorTemperature != null) {
+            textViewTemperatureSensor.setVisibility(View.VISIBLE);
+        } else textViewTemperatureSensor.setVisibility(View.GONE);
+
+        if (sensorHumidity != null) {
+            textViewHumiditySensor.setVisibility(View.VISIBLE);
+        } else textViewHumiditySensor.setVisibility(View.GONE);
+    }
+
+    private void registerSensorListener(SensorEventListener sensorEventListener, Sensor sensor) {
+        sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    private void getSensors() {
+        sensorManager = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
+        sensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
+        sensorTemperature = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
+        sensorHumidity = sensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY);
+
+        if (sensorTemperature != null) {
+            textViewTemperatureSensor.setVisibility(View.VISIBLE);
+        } else textViewTemperatureSensor.setVisibility(View.GONE);
+
+        if (sensorHumidity != null) {
+            textViewHumiditySensor.setVisibility(View.VISIBLE);
+        } else textViewHumiditySensor.setVisibility(View.GONE);
+    }
+
+    private void getParcelData() {
+        LocalParcel parcel = (LocalParcel) getArguments().getSerializable(STATE);
+
+        if (parcel != null) {
+
+            textViewCity.setText(parcel.getText());
+
+            if (parcel.isHumidityChecked()) {
+                textViewHumidity.setVisibility(View.VISIBLE);
+            } else textViewHumidity.setVisibility(View.GONE);
+
+            if (parcel.isPressureChecked()) {
+                textViewPressure.setVisibility(View.VISIBLE);
+            } else textViewPressure.setVisibility(View.GONE);
+
+        } else {
+            defaultCity = "Moscow";
+            textViewCity.setText(defaultCity);
+            textViewHumidity.setVisibility(View.GONE);
+            textViewPressure.setVisibility(View.GONE);
+        }
+    }
+
+    private void btnNextSetOnClickListener(final Fragment fragment) {
         nextWeekBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 MainActivity mainActivity = (MainActivity) getActivity();
-                mainActivity.startSecondFragment(WeeklyWeatherFragment.TAG, null, weeklyWeatherFragment);
+                mainActivity.startSecondFragment(WeeklyWeatherFragment.TAG, null, fragment);
             }
         });
     }
@@ -142,4 +176,36 @@ public class DataDisplayFragment extends Fragment {
         sensorValueText.append(event.values[0]);
         textView.setText(text + sensorValueText);
     }
+
+    private void infoServiceSend() {
+        intentServiceSend = new Intent(getActivity(), MainService.class);
+        intentServiceSend.putExtra(CITYVALUE, textViewCity.getText().toString());
+        getActivity().startService(intentServiceSend);
+    }
+
+    private void registerReceiver() {
+        receiver = new MyReceiver();
+        intentFilter = new IntentFilter(BROADCAST_ACTION);
+        getActivity().registerReceiver(receiver, intentFilter);
+    }
+
+    private void initViews(View view) {
+        textViewCity = view.findViewById(R.id.city);
+        textViewHumidity = view.findViewById(R.id.humidity);
+        textViewPressure = view.findViewById(R.id.pressure);
+        nextWeekBtn = view.findViewById(R.id.weekly_btn);
+        textViewTemperatureSensor = view.findViewById(R.id.temperature_sensor);
+        textViewHumiditySensor = view.findViewById(R.id.humidity_sensor);
+        tempTextView = view.findViewById(R.id.temperature);
+    }
+
+    class MyReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String tempValue = intent.getStringExtra(CITYVALUE);
+            tempTextView.setText(tempValue);
+        }
+    }
 }
+
