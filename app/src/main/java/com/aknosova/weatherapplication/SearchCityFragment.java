@@ -1,11 +1,12 @@
 package com.aknosova.weatherapplication;
 
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,16 +14,21 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.Objects;
+
+import static android.content.Context.MODE_PRIVATE;
+
 public class SearchCityFragment extends Fragment {
     public static final String TAG = "SearchCityFragment";
     public static final String STATE = "STATE";
+    private static final String SAVE_KEY = "SAVE_KEY";
 
     private LocalParcel localParcel;
 
     private TextInputEditText editTextCity;
     private Button searchBtn;
-    private CheckBox humidityParam;
-    private CheckBox pressureParam;
+    private String cityValue;
+    private SharedPreferences sharedPreferences;
 
     @Nullable
     @Override
@@ -37,21 +43,29 @@ public class SearchCityFragment extends Fragment {
 
         editTextCity = view.findViewById(R.id.search_input);
         searchBtn = view.findViewById(R.id.search_button);
-        humidityParam = view.findViewById(R.id.cb_humidity);
-        pressureParam = view.findViewById(R.id.cb_pressure);
 
         final DataDisplayFragment dataDisplayFragment = new DataDisplayFragment();
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            sharedPreferences = Objects.requireNonNull(getActivity()).getPreferences(MODE_PRIVATE);
+        }
+
+        if (sharedPreferences != null) {
+            String value = loadPreferences(sharedPreferences, SAVE_KEY, "Moscow");
+            editTextCity.setText(value);
+        }
 
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (editTextCity.getText() != null) {
-                    String value = editTextCity.getText().toString();
+                    cityValue = editTextCity.getText().toString();
 
-                    if (value.matches("")) {
+                    if (cityValue.matches("")) {
                         editTextCity.setError(getString(R.string.empty_error));
                     } else {
-                        localParcel = new LocalParcel(editTextCity.getText().toString(), humidityParam.isChecked(), pressureParam.isChecked());
+                        localParcel = new LocalParcel(editTextCity.getText().toString());
 
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(STATE, localParcel);
@@ -69,8 +83,25 @@ public class SearchCityFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+        if (editTextCity.getText() != null) {
+            savePreferences(SAVE_KEY, editTextCity.getText().toString());
+        }
+
         searchBtn.setOnClickListener(null);
         super.onDestroyView();
+    }
+
+    private void savePreferences(@NonNull String key, @NonNull String value) {
+        if (sharedPreferences != null) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(key, value);
+            editor.apply();
+        }
+    }
+
+    private String loadPreferences(@NonNull SharedPreferences sharedPreferences, String key, String value) {
+        String loadValue = sharedPreferences.getString(key, value);
+        return loadValue;
     }
 }
 

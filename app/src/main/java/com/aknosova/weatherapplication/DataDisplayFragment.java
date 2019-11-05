@@ -4,23 +4,34 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 import static android.content.Context.SENSOR_SERVICE;
 import static com.aknosova.weatherapplication.SearchCityFragment.STATE;
@@ -30,13 +41,13 @@ public class DataDisplayFragment extends Fragment {
     final static String BROADCAST_ACTION = "android_2.lesson04.app01.service_finished";
     final static String CITYVALUE = "CITYVALUE";
     public static final String TAG = "DataDisplayFragment";
+    private final static String LOG_TAG = DataDisplayFragment.TAG;
+    private final Handler handler = new Handler();
 
     private TextView textViewCity;
-    private TextView textViewHumidity;
+    private TextView textViewInfo;
     private TextView textViewHumiditySensor;
     private TextView textViewTemperatureSensor;
-    private TextView textViewPressure;
-    private String defaultCity;
     private Button nextWeekBtn;
     private SensorManager sensorManager;
     private List<Sensor> sensors;
@@ -46,6 +57,8 @@ public class DataDisplayFragment extends Fragment {
     private TextView tempTextView;
     private IntentFilter intentFilter;
     private Intent intentServiceSend;
+    private TextView weatherIcon;
+    Typeface weatherFont;
 
     @Nullable
     @Override
@@ -59,6 +72,10 @@ public class DataDisplayFragment extends Fragment {
         setRetainInstance(true);
 
         initViews(view);
+        initFonts();
+
+        updateWeatherData(getParcelData());
+
 
         getSensors();
 
@@ -99,8 +116,7 @@ public class DataDisplayFragment extends Fragment {
 
         if (getArguments() != null) {
             getParcelData();
-            infoServiceSend();
-            registerReceiver();
+
         }
 
         final WeeklyWeatherFragment weeklyWeatherFragment = new WeeklyWeatherFragment();
@@ -137,27 +153,16 @@ public class DataDisplayFragment extends Fragment {
         } else textViewHumiditySensor.setVisibility(View.GONE);
     }
 
-    private void getParcelData() {
+    private String getParcelData() {
+        String cityValue;
         LocalParcel parcel = (LocalParcel) getArguments().getSerializable(STATE);
 
-        if (parcel != null) {
-
-            textViewCity.setText(parcel.getText());
-
-            if (parcel.isHumidityChecked()) {
-                textViewHumidity.setVisibility(View.VISIBLE);
-            } else textViewHumidity.setVisibility(View.GONE);
-
-            if (parcel.isPressureChecked()) {
-                textViewPressure.setVisibility(View.VISIBLE);
-            } else textViewPressure.setVisibility(View.GONE);
-
-        } else {
-            defaultCity = "Moscow";
-            textViewCity.setText(defaultCity);
-            textViewHumidity.setVisibility(View.GONE);
-            textViewPressure.setVisibility(View.GONE);
+        if (parcel == null) {
+            return null;
         }
+        cityValue = parcel.getText();
+
+        return cityValue;
     }
 
     private void btnNextSetOnClickListener(final Fragment fragment) {
@@ -191,12 +196,79 @@ public class DataDisplayFragment extends Fragment {
 
     private void initViews(View view) {
         textViewCity = view.findViewById(R.id.city);
-        textViewHumidity = view.findViewById(R.id.humidity);
-        textViewPressure = view.findViewById(R.id.pressure);
+        textViewInfo = view.findViewById(R.id.info_data);
         nextWeekBtn = view.findViewById(R.id.weekly_btn);
         textViewTemperatureSensor = view.findViewById(R.id.temperature_sensor);
         textViewHumiditySensor = view.findViewById(R.id.humidity_sensor);
         tempTextView = view.findViewById(R.id.temperature);
+        weatherIcon = view.findViewById(R.id.image_weather);
+
+    }
+
+    private void updateWeatherData(final String city) {
+        new Thread() {
+            @Override
+            public void run() {
+                final JSONObject jsonObject = DataLoadWeatherOkHttp.getJSONData(city);
+                if (jsonObject == null) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                                textViewCity.setText(R.string.city_not_found);
+                                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), R.string.city_not_found,
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                } else {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            renderWeather(jsonObject);
+                        }
+                    });
+                }
+            }
+        }.start();
+    }
+
+    private void renderWeather(JSONObject jsonObject) {
+        Log.d(LOG_TAG, "json: " + jsonObject.toString());
+        try {
+            JSONObject details = jsonObject.getJSONArray("weather").getJSONObject(0);
+            JSONObject main = jsonObject.getJSONObject("main");
+
+            setPlaceName(jsonObject);
+            setDetails(details, main);
+            setCurrentTemp(main);
+            setWeatherIcon(details.getInt("id"),
+                    jsonObject.getJSONObject("sys").getLong("sunrise") * 1000,
+                    jsonObject.getJSONObject("sys").getLong("sunset") * 1000);
+        } catch (Exception exc) {
+            exc.printStackTrace();
+            Log.e(LOG_TAG, "One or more fields not found in the JSON data");
+        }
+    }
+
+    private void setPlaceName(JSONObject jsonObject) throws JSONException {
+        String cityText = jsonObject.getString("name").toUpperCase() + ", "
+                + jsonObject.getJSONObject("sys").getString("country");
+        Log.d("TEST", cityText);
+        textViewCity.setText(cityText);
+    }
+
+    private void setDetails(JSONObject details, JSONObject main) throws JSONException {
+        String detailsText = details.getString("description").toUpperCase() + "\n"
+                + "Humidity: " + main.getString("humidity") + "%" + "\n"
+                + "Pressure: " + main.getString("pressure") + "hPa";
+        textViewInfo.setText(detailsText);
+    }
+
+    private void setCurrentTemp(JSONObject main) throws JSONException {
+        String currentTextText = String.format(Locale.getDefault(), "%.2f",
+                main.getDouble("temp")) + "\u2103";
+        tempTextView.setText(currentTextText);
     }
 
     class MyReceiver extends BroadcastReceiver {
@@ -206,6 +278,55 @@ public class DataDisplayFragment extends Fragment {
             String tempValue = intent.getStringExtra(CITYVALUE);
             tempTextView.setText(tempValue);
         }
+    }
+
+    private void setWeatherIcon(int actualId, long  sunrise, long sunset) {
+        int id = actualId / 100;
+        String icon = "";
+
+        if (actualId == 800) {
+            long currentTime = new Date().getTime();
+            if (currentTime >= sunrise && currentTime < sunset) {
+                icon = "\u2600";
+            } else {
+                icon = getString(R.string.weather_clear_night);
+            }
+        } else {
+            switch (id) {
+                case 2: {
+                    icon = getString(R.string.weather_thunder);
+                    break;
+                }
+                case 3: {
+                    icon = getString(R.string.weather_drizzle);
+                    break;
+                }
+                case 5: {
+                    icon = getString(R.string.weather_rainy);
+                    break;
+                }
+                case 6: {
+                    icon = getString(R.string.weather_snowy);
+                    break;
+                }
+                case 7: {
+                    icon = getString(R.string.weather_foggy);
+                    break;
+                }
+                case 8: {
+                    icon = "\u2601";
+                    break;
+                }
+            }
+        }
+        weatherIcon.setText(icon);
+    }
+
+    private void initFonts() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            weatherFont = Typeface.createFromAsset(Objects.requireNonNull(getActivity()).getAssets(), "fonts/weather.ttf");
+        }
+        weatherIcon.setTypeface(weatherFont);
     }
 }
 
