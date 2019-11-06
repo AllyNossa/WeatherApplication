@@ -2,6 +2,8 @@ package com.aknosova.weatherapplication;
 
 import android.util.Log;
 
+import com.facebook.stetho.okhttp3.StethoInterceptor;
+
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -21,7 +23,10 @@ public class DataLoadWeatherOkHttp {
 
     private static String request(String city) {
 
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addNetworkInterceptor(new StethoInterceptor())
+                .build();
+
         Request request = new Request.Builder()
                 .addHeader(KEY, OPEN_WEATHER_API_KEY)
                 .url(String.format(OPEN_WEATHER_API_URL, city))
