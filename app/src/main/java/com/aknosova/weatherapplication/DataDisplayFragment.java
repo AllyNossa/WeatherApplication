@@ -1,6 +1,5 @@
 package com.aknosova.weatherapplication;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -12,7 +11,6 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,13 +23,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.aknosova.weatherapplication.rest.entities.WeatherModelRequest;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.content.Context.SENSOR_SERVICE;
 import static com.aknosova.weatherapplication.SearchCityFragment.STATE;
@@ -40,7 +43,7 @@ import static com.aknosova.weatherapplication.SearchCityFragment.STATE;
 public class DataDisplayFragment extends Fragment {
     final static String BROADCAST_ACTION = "android_2.lesson04.app01.service_finished";
     final static String CITYVALUE = "CITYVALUE";
-    public static final String TAG = "DataDisplayFragment";
+    static final String TAG = "DataDisplayFragment";
     private final static String LOG_TAG = DataDisplayFragment.TAG;
     private final Handler handler = new Handler();
 
@@ -53,12 +56,13 @@ public class DataDisplayFragment extends Fragment {
     private List<Sensor> sensors;
     private Sensor sensorTemperature;
     private Sensor sensorHumidity;
-    private MyReceiver receiver;
+    //    private MyReceiver receiver;
     private TextView tempTextView;
     private IntentFilter intentFilter;
     private Intent intentServiceSend;
     private TextView weatherIcon;
-    Typeface weatherFont;
+    private Context context;
+    private Typeface weatherFont;
 
     @Nullable
     @Override
@@ -71,11 +75,12 @@ public class DataDisplayFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setRetainInstance(true);
 
+        context = getContext();
+
         initViews(view);
         initFonts();
 
         updateWeatherData(getParcelData());
-
 
         getSensors();
 
@@ -139,10 +144,23 @@ public class DataDisplayFragment extends Fragment {
     }
 
     private void getSensors() {
-        sensorManager = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            sensorManager = (SensorManager) Objects.requireNonNull(getActivity()).getSystemService(SENSOR_SERVICE);
+        }
+
+        if (sensorManager == null) {
+            return;
+        }
+
         sensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
-        sensorTemperature = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
-        sensorHumidity = sensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY);
+
+        if (sensorManager != null) {
+            sensorTemperature = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
+        }
+
+        if (sensorManager != null) {
+            sensorHumidity = sensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY);
+        }
 
         if (sensorTemperature != null) {
             textViewTemperatureSensor.setVisibility(View.VISIBLE);
@@ -155,7 +173,10 @@ public class DataDisplayFragment extends Fragment {
 
     private String getParcelData() {
         String cityValue;
-        LocalParcel parcel = (LocalParcel) getArguments().getSerializable(STATE);
+        LocalParcel parcel = null;
+        if (getArguments() != null) {
+            parcel = (LocalParcel) getArguments().getSerializable(STATE);
+        }
 
         if (parcel == null) {
             return null;
@@ -170,7 +191,9 @@ public class DataDisplayFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 MainActivity mainActivity = (MainActivity) getActivity();
-                mainActivity.startSecondFragment(WeeklyWeatherFragment.TAG, null, fragment);
+                if (mainActivity != null) {
+                    mainActivity.startSecondFragment(WeeklyWeatherFragment.TAG, null, fragment);
+                }
             }
         });
     }
@@ -181,18 +204,18 @@ public class DataDisplayFragment extends Fragment {
         sensorValueText.append(event.values[0]);
         textView.setText(text + sensorValueText);
     }
-
-    private void infoServiceSend() {
-        intentServiceSend = new Intent(getActivity(), MainService.class);
-        intentServiceSend.putExtra(CITYVALUE, textViewCity.getText().toString());
-        getActivity().startService(intentServiceSend);
-    }
-
-    private void registerReceiver() {
-        receiver = new MyReceiver();
-        intentFilter = new IntentFilter(BROADCAST_ACTION);
-        getActivity().registerReceiver(receiver, intentFilter);
-    }
+//
+//    private void infoServiceSend() {
+//        intentServiceSend = new Intent(getActivity(), MainService.class);
+//        intentServiceSend.putExtra(CITYVALUE, textViewCity.getText().toString());
+//        getActivity().startService(intentServiceSend);
+//    }
+//
+//    private void registerReceiver() {
+//        receiver = new MyReceiver();
+//        intentFilter = new IntentFilter(BROADCAST_ACTION);
+//        getActivity().registerReceiver(receiver, intentFilter);
+//    }
 
     private void initViews(View view) {
         textViewCity = view.findViewById(R.id.city);
@@ -206,81 +229,71 @@ public class DataDisplayFragment extends Fragment {
     }
 
     private void updateWeatherData(final String city) {
-        new Thread() {
-            @Override
-            public void run() {
-                final JSONObject jsonObject = DataLoadWeatherOkHttp.getJSONData(city);
-                if (jsonObject == null) {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                                textViewCity.setText(R.string.city_not_found);
-                                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), R.string.city_not_found,
-                                        Toast.LENGTH_LONG).show();
-                            }
+        OpenWeatherAdapter.getSingleton().getiOpenWeather().loadWeather(city,
+                "762ee61f52313fbd10a4eb54ae4d4de2", "metric")
+                .enqueue(new Callback<WeatherModelRequest>() {
+                    @Override
+                    public void onResponse(@NonNull Call<WeatherModelRequest> call,
+                                           @NonNull Response<WeatherModelRequest> response) {
+                        if (response.body() == null) {
+                            textViewCity.setText(R.string.change_request);
+
+                            Toast.makeText(context, R.string.city_not_found, Toast.LENGTH_LONG).show();
+                            return;
                         }
-                    });
-                } else {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            renderWeather(jsonObject);
+
+                        if (response.code() != 200) {
+                            checkResponseCode(response.code());
+                            return;
                         }
-                    });
-                }
-            }
-        }.start();
+
+                        renderWeather(response.body());
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull Call<WeatherModelRequest> call, Throwable t) {
+                        Toast.makeText(context, R.string.internet_fail,
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
-    private void renderWeather(JSONObject jsonObject) {
-        Log.d(LOG_TAG, "json: " + jsonObject.toString());
-        try {
-            JSONObject details = jsonObject.getJSONArray("weather").getJSONObject(0);
-            JSONObject main = jsonObject.getJSONObject("main");
-
-            setPlaceName(jsonObject);
-            setDetails(details, main);
-            setCurrentTemp(main);
-            setWeatherIcon(details.getInt("id"),
-                    jsonObject.getJSONObject("sys").getLong("sunrise") * 1000,
-                    jsonObject.getJSONObject("sys").getLong("sunset") * 1000);
-        } catch (Exception exc) {
-            exc.printStackTrace();
-            Log.e(LOG_TAG, "One or more fields not found in the JSON data");
-        }
+    private void renderWeather(WeatherModelRequest weatherModelRequest) {
+        setPlaceName(weatherModelRequest.name, weatherModelRequest.sys.country);
+        setDetails(weatherModelRequest.weather[0].description, weatherModelRequest.main.humidity, weatherModelRequest.main.pressure);
+        setCurrentTemp(weatherModelRequest.main.temp);
+        setWeatherIcon(weatherModelRequest.weather[0].id,
+                weatherModelRequest.sys.sunrise * 1000,
+                weatherModelRequest.sys.sunset * 1000);
     }
 
-    private void setPlaceName(JSONObject jsonObject) throws JSONException {
-        String cityText = jsonObject.getString("name").toUpperCase() + ", "
-                + jsonObject.getJSONObject("sys").getString("country");
-        Log.d("TEST", cityText);
+    private void setPlaceName(String name, String country) {
+        String cityText = name.toUpperCase() + ", " + country;
         textViewCity.setText(cityText);
     }
 
-    private void setDetails(JSONObject details, JSONObject main) throws JSONException {
-        String detailsText = details.getString("description").toUpperCase() + "\n"
-                + "Humidity: " + main.getString("humidity") + "%" + "\n"
-                + "Pressure: " + main.getString("pressure") + "hPa";
+    private void setDetails(String description, float humidity, float pressure) {
+        String detailsText = description.toUpperCase() + "\n"
+                + "Humidity: " + humidity + "%" + "\n"
+                + "Pressure: " + pressure + "hPa";
         textViewInfo.setText(detailsText);
     }
 
-    private void setCurrentTemp(JSONObject main) throws JSONException {
-        String currentTextText = String.format(Locale.getDefault(), "%.2f",
-                main.getDouble("temp")) + "\u2103";
+    private void setCurrentTemp(float temp) {
+        String currentTextText = String.format(Locale.getDefault(), "%.0f", temp) + "\u2103";
         tempTextView.setText(currentTextText);
     }
 
-    class MyReceiver extends BroadcastReceiver {
+//    class MyReceiver extends BroadcastReceiver {
+//
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            String tempValue = intent.getStringExtra(CITYVALUE);
+//            tempTextView.setText(tempValue);
+//        }
+//    }
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String tempValue = intent.getStringExtra(CITYVALUE);
-            tempTextView.setText(tempValue);
-        }
-    }
-
-    private void setWeatherIcon(int actualId, long  sunrise, long sunset) {
+    private void setWeatherIcon(int actualId, long sunrise, long sunset) {
         int id = actualId / 100;
         String icon = "";
 
@@ -322,11 +335,94 @@ public class DataDisplayFragment extends Fragment {
         weatherIcon.setText(icon);
     }
 
-    private void initFonts() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            weatherFont = Typeface.createFromAsset(Objects.requireNonNull(getActivity()).getAssets(), "fonts/weather.ttf");
+    private void checkResponseCode(int code) {
+        switch (code) {
+            case 500:
+                textViewCity.setText("Повторите запрос позднее");
+                Toast.makeText(context, R.string.error_server,
+                        Toast.LENGTH_LONG).show();
+                break;
+
+            case 401:
+
+                textViewCity.setText("Повторите запрос еще раз");
+                Toast.makeText(context, R.string.lost_token,
+                        Toast.LENGTH_LONG).show();
+                break;
+
         }
+    }
+
+    private void initFonts() {
+        weatherFont = Typeface.createFromAsset(context.getAssets(), "fonts/weather.ttf");
+
         weatherIcon.setTypeface(weatherFont);
     }
+
+//    private void updateWeatherData(final String city) {
+//        new Thread() {
+//            @Override
+//            public void run() {
+//                final JSONObject jsonObject = DataLoadWeatherOkHttp.getJSONData(city);
+//                if (jsonObject == null) {
+//                    handler.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//                                textViewCity.setText(R.string.city_not_found);
+//                                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), R.string.city_not_found,
+//                                        Toast.LENGTH_LONG).show();
+//                            }
+//                        }
+//                    });
+//                } else {
+//                    handler.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            renderWeather(jsonObject);
+//                        }
+//                    });
+//                }
+//            }
+//        }.start();
+//    }
+
+    //    private void renderWeather(JSONObject jsonObject) {
+//        Log.d(LOG_TAG, "json: " + jsonObject.toString());
+//        try {
+//            JSONObject details = jsonObject.getJSONArray("weather").getJSONObject(0);
+//            JSONObject main = jsonObject.getJSONObject("main");
+//
+//            setPlaceName(jsonObject);
+//            setDetails(details, main);
+//            setCurrentTemp(main);
+//            setWeatherIcon(details.getInt("id"),
+//                    jsonObject.getJSONObject("sys").getLong("sunrise") * 1000,
+//                    jsonObject.getJSONObject("sys").getLong("sunset") * 1000);
+//        } catch (Exception exc) {
+//            exc.printStackTrace();
+//            Log.e(LOG_TAG, "One or more fields not found in the JSON data");
+//        }
+//    }
+//
+//    private void setPlaceName(JSONObject jsonObject) throws JSONException {
+//        String cityText = jsonObject.getString("name").toUpperCase() + ", "
+//                + jsonObject.getJSONObject("sys").getString("country");
+//        Log.d("TEST", cityText);
+//        textViewCity.setText(cityText);
+//    }
+//
+//    private void setDetails(JSONObject details, JSONObject main) throws JSONException {
+//        String detailsText = details.getString("description").toUpperCase() + "\n"
+//                + "Humidity: " + main.getString("humidity") + "%" + "\n"
+//                + "Pressure: " + main.getString("pressure") + "hPa";
+//        textViewInfo.setText(detailsText);
+//    }
+//
+//    private void setCurrentTemp(JSONObject main) throws JSONException {
+//        String currentTextText = String.format(Locale.getDefault(), "%.2f",
+//                main.getDouble("temp")) + "\u2103";
+//        tempTextView.setText(currentTextText);
+//    }
 }
 

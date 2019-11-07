@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="city_not_found">Город не найден</string>
+    <string name="error_server">Ошибка обработки запроса</string>
+    <string name="internet_fail">Нет подлючения к сети</string>
+    <string name="lost_token">Потерялся токен</string>
+    <string name="change_request">Исправьте запрос</string>
 </resources>

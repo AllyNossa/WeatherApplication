@@ -19,6 +19,7 @@ import com.google.android.material.navigation.NavigationView;
 public class MainActivity extends AppCompatActivity implements FragmentNavigator, NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+    private SearchCityFragment searchCityFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        SearchCityFragment searchCityFragment = new SearchCityFragment();
+        searchCityFragment = new SearchCityFragment();
 
         if (getSupportFragmentManager().findFragmentById(R.id.main_container) == null) {
             startFirstFragment(SearchCityFragment.TAG, searchCityFragment);
@@ -104,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.search_menu:
-                Toast.makeText(this, "Заглушка для поиска города", Toast.LENGTH_LONG).show();
+                startFirstFragment(SearchCityFragment.TAG, searchCityFragment);
                 return true;
             case R.id.update_menu:
                 Toast.makeText(this, "Заглушка для обновления информации", Toast.LENGTH_LONG).show();
