@@ -1,11 +1,13 @@
 package com.aknosova.weatherapplication;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
@@ -44,8 +46,26 @@ public class SearchCityFragment extends Fragment {
         editTextCity = view.findViewById(R.id.search_input);
         searchBtn = view.findViewById(R.id.search_button);
 
-        final DataDisplayFragment dataDisplayFragment = new DataDisplayFragment();
+        editTextCity.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    InputMethodManager inputMethodManager = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (inputMethodManager != null) {
+                        inputMethodManager.hideSoftInputFromWindow(v.getRootView().getWindowToken(), 0);
+                    }
+                }
+//                if () {
+//                    val focusPicked = ViewUtils.pickFocus(this);
+//                    if (!focusPicked) {
+//                        rootView.clearFocus()
+//                    }
+//                }
+            }
+        });
+
+        final DataDisplayFragment dataDisplayFragment = new DataDisplayFragment();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             sharedPreferences = Objects.requireNonNull(getActivity()).getPreferences(MODE_PRIVATE);
