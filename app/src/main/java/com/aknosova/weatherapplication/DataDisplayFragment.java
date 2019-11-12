@@ -3,6 +3,7 @@ package com.aknosova.weatherapplication;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -23,6 +24,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
+import com.aknosova.weatherapplication.db.DataBaseHelper;
+import com.aknosova.weatherapplication.db.WeatherTable;
 import com.aknosova.weatherapplication.rest.entities.WeatherModelRequest;
 
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +33,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -62,7 +64,7 @@ public class DataDisplayFragment extends Fragment {
     private Intent intentServiceSend;
     private TextView weatherIcon;
     private Context context;
-    private Typeface weatherFont;
+    private SQLiteDatabase database;
 
     @Nullable
     @Override
@@ -79,6 +81,7 @@ public class DataDisplayFragment extends Fragment {
 
         initViews(view);
         initFonts();
+        initDB();
 
         updateWeatherData(getParcelData());
 
@@ -145,7 +148,7 @@ public class DataDisplayFragment extends Fragment {
 
     private void getSensors() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            sensorManager = (SensorManager) Objects.requireNonNull(getActivity()).getSystemService(SENSOR_SERVICE);
+            sensorManager = (SensorManager) requireNonNull(getActivity()).getSystemService(SENSOR_SERVICE);
         }
 
         if (sensorManager == null) {
@@ -265,6 +268,12 @@ public class DataDisplayFragment extends Fragment {
         setWeatherIcon(weatherModelRequest.weather[0].id,
                 weatherModelRequest.sys.sunrise * 1000,
                 weatherModelRequest.sys.sunset * 1000);
+
+        if (WeatherTable.checkValue(weatherModelRequest.name, database)) {
+            WeatherTable.editValue(weatherModelRequest.name, weatherModelRequest.main.temp, database);
+        } else {
+            WeatherTable.addValue(weatherModelRequest.name, weatherModelRequest.main.temp, database);
+        }
     }
 
     private void setPlaceName(String name, String country) {
@@ -354,9 +363,19 @@ public class DataDisplayFragment extends Fragment {
     }
 
     private void initFonts() {
-        weatherFont = Typeface.createFromAsset(context.getAssets(), "fonts/weather.ttf");
+        Typeface weatherFont = Typeface.createFromAsset(context.getAssets(), "fonts/weather.ttf");
 
         weatherIcon.setTypeface(weatherFont);
+    }
+
+    private void initDB() {
+        database = new DataBaseHelper(requireNonNull(getActivity()).getApplicationContext()).getWritableDatabase();
+    }
+
+    private static <T> T requireNonNull(T obj) {
+        if (obj == null)
+            throw new NullPointerException();
+        return obj;
     }
 
 //    private void updateWeatherData(final String city) {
