@@ -8,7 +8,6 @@ public class WeatherTable {
     private final static String TABLE_NAME = "Weather";
     private final static String COLUMN_CITY = "city";
     private final static String COLUMN_TEMPERATURE = "temperature";
-    private final static String COLUMN_PRESSURE = "pressure";
 
     static void createTable(SQLiteDatabase database) {
         database.execSQL("CREATE TABLE " + TABLE_NAME + " (" + COLUMN_CITY + " TEXT," + COLUMN_TEMPERATURE + " INTEGER);");
